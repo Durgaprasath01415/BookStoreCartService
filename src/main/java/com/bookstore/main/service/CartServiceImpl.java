@@ -27,34 +27,18 @@ public class CartServiceImpl implements ICartService {
 	public ResponseDTO addToCart(String token,CartDTO cartDto,int bookId) {
 	boolean verify = restTemplate.getForObject("http://bookstoreuser-client/verifyemail/" + token,
 			Boolean.class);
-	String userName = restTemplate.getForObject("http://bookstoreuser-client/username/" + token,
-			String.class);
+	int userId = restTemplate.getForObject("http://bookstoreuser-client/userid/" + token,
+			Integer.class);
 	if(verify) {
-		String bookName = restTemplate.getForObject("http://bookstore-client/bookname/" + token +"/" +bookId,
-				String.class);
 		CartModel orderDetails = modelMapper.map(cartDto, CartModel.class);
-		orderDetails.setUser(userName);
-		orderDetails.setBook(bookName);
+		orderDetails.setUser(userId);
+		orderDetails.setBook(bookId);
 		cartRepository.save(orderDetails);
 		return new ResponseDTO("added to cart successfully",orderDetails);
 	}else {
 		throw new CartException(400,"User not logged in");
 	}
 	}
-	
-	
-//	@Override
-//	public ResponseDTO addToCart(String token,CartDTO cartDto) {
-//	boolean verify = restTemplate.getForObject("http://bookstoreuser-client/verifyemail/" + token,
-//			Boolean.class);
-//	if(verify) {
-//		CartModel orderDetails = modelMapper.map(cartDto, CartModel.class);
-//		cartRepository.save(orderDetails);
-//		return new ResponseDTO("added to cart successfully",orderDetails);
-//	}else {
-//		throw new CartException(400,"User not logged in");
-//	}
-//	}
 
 	@Override
 	public ResponseDTO deleteFromCart(String token, int id) {

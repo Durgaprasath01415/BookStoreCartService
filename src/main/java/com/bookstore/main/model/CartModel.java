@@ -16,8 +16,8 @@ public class CartModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String user;
-	private String book;
+	private int user;
+	private int book;
 	private long quantity;
 
 }
